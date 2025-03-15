@@ -21,4 +21,27 @@
 
 @push('scripts')
     {{ $dataTable->scripts() }}
+    <script>
+        $(document).on('click', '.delete-btn', function() {
+            let url = $(this).data('url');
+            let row = $(this).closest('tr');
+    
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $('#kategori-table').DataTable().ajax.reload();
+                    },
+                    error: function(xhr) {
+                        alert("Terjadi kesalahan saat menghapus data.");
+                    }
+                });
+            }
+        });
+    </script>
 @endpush
