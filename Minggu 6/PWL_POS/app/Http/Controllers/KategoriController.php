@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\KategoriModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
@@ -39,12 +40,15 @@ class KategoriController extends Controller
       return DataTables::of($kategori)
           ->addIndexColumn()
           ->addColumn('aksi', function ($kategori) {
-              $btn = '<a href="'.url('/kategori/' .$kategori->kategori_id).'" class="btn btn-info btn-sm">Detail</a> ';
-              $btn .= '<a href="'.url('/kategori/' .$kategori->kategori_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
-              $btn .= '<form class="d-inline-block" method="POST" action="'.url('/kategori/'.$kategori->kategori_id).'">'
-                   . csrf_field() . method_field('DELETE')
-                   . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah anda yakin menghapus data ini?\');">Hapus</button></form>';
-              return $btn; 
+            //   $btn = '<a href="'.url('/kategori/' .$kategori->kategori_id).'" class="btn btn-info btn-sm">Detail</a> ';
+            //   $btn .= '<a href="'.url('/kategori/' .$kategori->kategori_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
+            //   $btn .= '<form class="d-inline-block" method="POST" action="'.url('/kategori/'.$kategori->kategori_id).'">'
+            //        . csrf_field() . method_field('DELETE')
+            //        . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah anda yakin menghapus data ini?\');">Hapus</button></form>';
+            $btn = '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button>';
+            $btn .= '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button>';
+            $btn .= '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button>';
+            return $btn; 
           })
           ->rawColumns(['aksi'])
           ->make(true);
@@ -137,4 +141,105 @@ class KategoriController extends Controller
           return redirect('/kategori')->with('error', 'Data kategori tidak bisa dihapus karena terdapat data yang terkait');
       }
    }
+
+    public function create_ajax() {
+        $kategori = KategoriModel::all();
+        return view('kategori.create_ajax', ['kategori' => $kategori]);
+    }
+
+    public function store_ajax(Request $request) {
+        // cek apakah request berupa ajax
+        if($request->ajax() || $request->wantsJson()){
+            $rules = [
+                'kategori_kode' => 'required|string|max:6|regex:/^[A-Z0-9]+$/',
+                'kategori_nama' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/'
+            ];
+
+            // use Illuminate\Support\Facades\Validator;
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return response()->json([
+                    'status' => false, //response sttaus, false: error/gagal, true=berhasil
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(), // pesan error validasi
+                ]);
+            }
+
+            KategoriModel::create($request->all());
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Level berhasil disimpan'
+            ]);
+        }
+        redirect('/kategori');
+    }
+
+    // Menampilkan halaman form edit kategori ajax
+    public function edit_ajax(string $id) {
+        $kategori = kategoriModel::find($id);
+        return view('kategori.edit_ajax', ['kategori' => $kategori]);
+    }
+
+    public function update_ajax(Request $request, string $id)
+    {
+        // Cek apakah request dari AJAX
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_kode' => 'required|string|max:6|regex:/^[A-Z0-9]+$/',
+                'kategori_nama' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/'
+            ];
+
+            // use Illuminate\Support\Facades\Validator;
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false, // Respon JSON, true: berhasil, false: gagal
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors() // Menunjukkan field mana yang error
+                ]);
+            }
+
+            $check = KategoriModel::find($id);
+            if ($check) {
+                $check->update($request->all());
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+
+    public function confirm_ajax($id) {
+        $kategori = KategoriModel::find($id);
+        return view('kategori.confirm_ajax', ['kategori' => $kategori]);
+    }
+
+    public function delete_ajax(Request $request, $id) {
+        //cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
+            $kategori = KategoriModel::find($id);
+            if ($kategori) {
+                $kategori->delete();
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
 }
