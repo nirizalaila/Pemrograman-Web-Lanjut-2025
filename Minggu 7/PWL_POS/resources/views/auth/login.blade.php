@@ -60,6 +60,7 @@
                         </div>
                     </div>
                 </form>
+                <p class="mt-3 mb-1 text-center">Belum punya akun? <a href="{{ url('register') }}">Daftar</a></p>
             </div>
         </div>
     </div>
