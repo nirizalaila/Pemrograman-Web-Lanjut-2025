@@ -18,7 +18,7 @@
              @if (session ('error'))
                  <div class="alert alert-danger">{{ session('error') }}</div>
              @endif
-             <table class="table table-bordered table-striped table-hover table-sm" id="table_supplier">
+             <table class="table table-bordered table-striped table-hover table-sm" id="table-supplier">
                  <thead>
                      <tr>
                         <th>ID</th>
@@ -40,15 +40,15 @@
             $('#myModal').modal('show');
         });
     }
-    var dataSupplier
+    var tableSupplier
          $(document).ready(function() {
-             dataSupplier = $('#table_supplier').DataTable({
+             tableSupplier = $('#table-supplier').DataTable({
                  // Serverside: true, jika ingin menggunakan server side processing
                  serverSide: true,
                  ajax: {
-                     "url": "{{ url('supplier/list') }}",
-                     "dataType": "json",
-                     "type": "POST"
+                     url: "{{ url('supplier/list') }}",
+                     dataType: "json",
+                     type: "POST"
                  },
                  columns: [
                      {

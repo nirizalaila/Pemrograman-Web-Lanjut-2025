@@ -246,57 +246,61 @@
     public function import_ajax (Request $request) {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                //validasi file harus xls atau xlsx, max 1MB
                 'file_supplier' => ['required', 'mimes:xlsx', 'max:1024']
             ];
-
+    
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
-                    'message' => ' Validasi Gagal',
+                    'message' => 'Validasi Gagal',
                     'msgField' => $validator->errors()
                 ]);
             }
-
-            $file = $request->file('file_supplier'); //ambil file dari request
-
-            $reader = IOFactory::createReader('Xlsx'); //load reader file excel
-            $reader->setReadDataOnly(true);
-            $spreadsheet = $reader->load($file->getRealPath()); //load file excel
-            $sheet = $spreadsheet->getActiveSheet(); //ambil sheet yang aktif
-            
-            $data = $sheet->toArray(null, false, true, true); //ambil data excel
-
-            $insert = [];
-            if(count($data) > 1) { //jika data lebih dari 1 baris
-                foreach($data as $baris => $value) {
-                    if($baris > 1) { //baris ke 1 adalah header, maka lewati
-                        $insert[] = [
-                            'suppler_id' => $value['A'],
-                            'supplier_kode' => $value['B'],
-                            'supplier_nama' => $value['C'],
-                            'created_at' => now(),
-                        ];
+    
+            try {
+                $file = $request->file('file_supplier');
+    
+                $reader = IOFactory::createReader('Xlsx');
+                $reader->setReadDataOnly(true);
+                $spreadsheet = $reader->load($file->getRealPath());
+                $sheet = $spreadsheet->getActiveSheet();
+    
+                $data = $sheet->toArray(null, false, true, true);
+    
+                $insert = [];
+                if (count($data) > 1) {
+                    foreach ($data as $baris => $value) {
+                        if ($baris > 1) {
+                            $insert[] = [
+                                'supplier_id' => $value['A'],
+                                'supplier_kode' => $value['B'],
+                                'supplier_nama' => $value['C']
+                            ];
+                        }
                     }
+    
+                    if (count($insert) > 0) {
+                        SupplierModel::insertOrIgnore($insert);
+                    }
+    
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil diimport',
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Tidak ada data yang diimport',
+                    ]);
                 }
-
-                if(count($insert) > 0) {
-                    //insert data ke database, jika data sudah ada, maka diabaikan
-                    SupplierModel::insertOrIgnore($insert);
-                }
-
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diimport',
-                ]);
-            } else {
+            } catch (\Exception $e) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Tidak ada data yang diimport',
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
                 ]);
             }
         }
         return redirect('/');
-    }
+    }    
  }
