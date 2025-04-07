@@ -105,6 +105,8 @@ Route::middleware(['auth'])->group(function() {
             Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']); // untuk tampilkan form confirm delete supplier Ajax
             Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']); // untuk hapus data supplier Ajax
             Route::delete('/{id}', [SupplierController::class, 'destroy']); // menghapus data supplier
+            Route::get('/import', [SupplierController::class, 'import']); //ajax form upload excel
+            Route::post('/import_ajax', [SupplierController::class, 'import_ajax']); //ajax import excel
         });
     });
     Route::group(['prefix' => 'barang'], function(){
