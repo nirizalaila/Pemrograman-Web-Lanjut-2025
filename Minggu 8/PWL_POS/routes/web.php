@@ -87,6 +87,8 @@ Route::middleware(['auth'])->group(function() {
             Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']); // untuk tampilkan form confirm delete kategori Ajax
             Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']); // untuk hapus data kategori Ajax
             Route::delete('/{id}', [KategoriController::class, 'destroy']); // menghapus data kategori
+            Route::get('/import', [KategoriController::class, 'import']); //ajax form upload excel
+            Route::post('/import_ajax', [KategoriController::class, 'import_ajax']); //ajax import excel
         });
     });
     Route::group(['prefix' => 'supplier'], function(){
