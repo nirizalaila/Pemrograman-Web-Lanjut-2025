@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function() {
             Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // untuk tampilkan form confirm delete level Ajax
             Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // untuk hapus data level Ajax
             Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data level
+            Route::get('/import', [LevelController::class, 'import']); //ajax form upload excel
+            Route::post('/import_ajax', [LevelController::class, 'import_ajax']); //ajax import excel
         });
     });
     Route::group(['prefix' => 'kategori'], function(){
