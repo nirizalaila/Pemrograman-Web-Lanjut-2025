@@ -305,4 +305,53 @@ class LevelController extends Controller
         }
         return redirect('/');
     }
+
+    public function export_excel() {
+        //ambil data barang yang akan di export
+        $level = LevelModel::select('level_id', 'level_kode', 'level_nama')
+            ->orderBy('level_id')
+            ->get();
+
+        //load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet(); //ambil sheet yang aktif
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Level');
+        $sheet->setCellValue('C1', 'Nama Level');
+
+        $sheet->getStyle('A1:c1')->getFont()->setBold(true); //bold header
+
+        $no = 1; //nomor data dimulai dari 1
+        $baris = 2; //baris data dimulai dari baris ke 2
+
+        foreach($level as $key => $value) {
+            $sheet->setCellValue('A'.$baris, $no);
+            $sheet->setCellValue('B'.$baris, $value->level_kode);
+            $sheet->setCellValue('C'.$baris, $value->level_nama);
+            $baris++; //nomor baris bertambah 1
+            $no++; //nomor data bertambah 1
+        }
+
+        foreach(range('A', 'C') as $columID) {
+            $sheet->getColumnDimension($columID)->setAutoSize(true); //set auto size untuk kolom
+        }
+
+        $sheet->setTitle('Data Level'); //set title sheet
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Level '.date('Y-m-d H:i:s').'.xlsx'; 
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheethtml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        header('Chace-Control: max-age=1');
+        header('Expires:Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: '. gmdate('D, d M Y H:i:s'). ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
 }
