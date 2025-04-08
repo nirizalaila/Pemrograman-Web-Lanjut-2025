@@ -115,6 +115,7 @@ Route::middleware(['auth'])->group(function() {
             Route::get('/import', [SupplierController::class, 'import']); //ajax form upload excel
             Route::post('/import_ajax', [SupplierController::class, 'import_ajax']); //ajax import excel
             Route::get('/export_excel', [SupplierController::class, 'export_excel']); //export excel
+            Route::get('/export_pdf', [SupplierController::class, 'export_pdf']); //export pdf
         });
     });
     Route::group(['prefix' => 'barang'], function(){
