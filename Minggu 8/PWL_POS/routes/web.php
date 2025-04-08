@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function() {
             Route::get('/import', [KategoriController::class, 'import']); //ajax form upload excel
             Route::post('/import_ajax', [KategoriController::class, 'import_ajax']); //ajax import excel
             Route::get('/export_excel', [KategoriController::class, 'export_excel']); //export excel
+            Route::get('/export_pdf', [KategoriController::class, 'export_pdf']); //export pdf
         });
     });
     Route::group(['prefix' => 'supplier'], function(){
