@@ -14,7 +14,7 @@
                     <select name="user_id" id="user_id" class="form-control" required>
                         <option value="">- Pilih User -</option>
                         @foreach($user as $u)
-                            <option value="{{ $u->user_id }}">{{ $l->nama }}</option>
+                            <option value="{{ $u->user_id }}">{{ $u->nama }}</option>
                         @endforeach
                     </select>
                     <small id="error-user_id" class="error-text form-text text-danger"></small>
@@ -42,7 +42,7 @@
 $(document).ready(function() {
     $("#form-tambah").validate({
         rules: {
-            user_id: { required: true, number: true}
+            user_id: { required: true, number: true},
             pembeli: { required: true, minlength: 3, maxlength: 255 },
             penjualan_kode: { required: true, minlength: 3, maxlength: 50 },
         },
