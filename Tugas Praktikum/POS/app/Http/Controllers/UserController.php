@@ -200,7 +200,7 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|string|min:3|unique:m_user,username',
                 'nama'     => 'required|string|max:100',
-                'password' => 'required|min:6'
+                'password' => 'required|min:5'
             ];
     
             // use Illuminate\Support\Facades\Validator;
@@ -338,6 +338,7 @@ class UserController extends Controller
                             'user_id' => $value['A'],
                             'username' => $value['B'],
                             'nama' => $value['C'],
+                            'level_id' => $value['D'],
                             'created_at' => now(),
                         ];
                     }
