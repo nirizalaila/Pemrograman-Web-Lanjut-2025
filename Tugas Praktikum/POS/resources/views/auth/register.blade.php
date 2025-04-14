@@ -27,12 +27,12 @@
    <div class="register-box">
      <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a>
+            <a href="{{ url('/') }}" class="h2"><b>POS - Register</b></a>
      </div>
      <div class="card-body register-card-body">
-         <p class="login-box-msg">Register Pengguna Baru</p>
+         <p class="login-box-msg">Create an account to get started</p>
  
-         <form action="{{ url('postRegister') }}" method="post" id="form-register">
+         <form action="{{ url('register') }}" method="post" id="form-register">
            @csrf
            <div class="input-group mb-3">
              <input type="text" class="form-control" name="username" id="username" placeholder="Username">
@@ -45,20 +45,24 @@
            <div class="input-group mb-3">
              <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama">
              <div class="input-group-append">
-               <div class="input-group-text"><span class="fas fa-user"></span></div>
+               <div class="input-group-text"><span class="fas fa-id-badge"></span></div>
              </div>
              <small id="error-nama" class="error-text text-danger"></small>
            </div>
  
            <div class="input-group mb-3">
-             <select name="level_id" id="level_id" class="form-control">
-               <option value="">Pilih Level</option>
-               @foreach ($levels as $item)
-           <option value="{{ $item->level_id }}">{{ $item->level_nama}}</option>
-         @endforeach
-             </select>
-             <small id="error-level_id" class="error-text text-danger"></small>
-           </div>
+            <select name="level_id" id="level_id" class="form-control">
+              <option value="">Pilih Level</option>
+              @foreach ($levels as $item)
+                <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
+              @endforeach
+            </select>
+            <div class="input-group-append">
+              <div class="input-group-text"><span class="fas fa-users"></span></div>
+            </div>
+          </div>
+          <small id="error-level_id" class="error-text text-danger"></small>
+          
  
            <div class="input-group mb-3">
              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
@@ -69,8 +73,7 @@
            </div>
  
            <div class="input-group mb-3">
-             <input type="password" class="form-control" name="password_confirmation" id="password_confirmation"
-               placeholder="Ulangi Password">
+             <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Ulangi Password">
              <div class="input-group-append">
                <div class="input-group-text"><span class="fas fa-lock"></span></div>
              </div>
@@ -84,7 +87,7 @@
            </div>
          </form>
  
-         <p class="mt-3 mb-1 text-center">Sudah punya akun? <a href="{{ url('login') }}">Login</a></p>
+         <p class="mt-3 mb-1 text-center">Already have an account? <a href="{{ url('login') }}">Login</a></p>
        </div>
      </div>
    </div>

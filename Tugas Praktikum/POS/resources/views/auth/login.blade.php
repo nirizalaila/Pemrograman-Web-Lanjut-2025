@@ -24,7 +24,7 @@
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a>
+                <a href="{{ url('/') }}" class="h2"><b>POS - Login</b></a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </form>
-                <p class="mt-3 mb-1 text-center">Belum punya akun? <a href="{{ url('register') }}">Daftar</a></p>
+                <p class="mt-3 mb-1 text-center">Dont have an account? <a href="{{ url('register') }}">Regist</a></p>
             </div>
         </div>
     </div>
