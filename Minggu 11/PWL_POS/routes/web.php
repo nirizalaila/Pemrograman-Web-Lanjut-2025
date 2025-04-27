@@ -8,6 +8,8 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\StokController;
 use Illuminate\Support\Facades\Route;
 use Monolog\Level;
 
@@ -144,6 +146,50 @@ Route::middleware(['auth'])->group(function() {
             Route::post('/import_ajax', [BarangController::class, 'import_ajax']); //ajax import excel
             Route::get('/export_excel', [BarangController::class, 'export_excel']); //export excel
             Route::get('/export_pdf', [BarangController::class, 'export_pdf']); //export pdf
+        });
+    });
+    Route::group(['prefix' => 'penjualan'], function(){
+        Route::middleware(['authorize:ADM,MNG,STF'])->group(function() {
+            Route::get('/', [PenjualanController::class, 'index']); // menampilkan halaman awal penjualan
+            Route::post('/list', [PenjualanController::class, 'list']); // menampilkan data penjualan dalam bentuk json untuk datables
+            Route::get('/create', [PenjualanController::class, 'create']); // menampilkan halaman form tambah penjualan
+            Route::get('/create_ajax', [PenjualanController::class, 'create_ajax']); // menampilkan halaman form tambah penjualan Ajax
+            Route::post('/ajax', [PenjualanController::class, 'store_ajax']); // menyimpan data penjualan baru Ajax
+            Route::post('/', [PenjualanController::class, 'store']); // menyimpan data penjualan baru
+            Route::get('/{id}', [PenjualanController::class, 'show']); // menampilkan detail penjualan
+            Route::get('/{id}/edit', [PenjualanController::class, 'edit']); // menampilkan halaman form edit penjualan
+            Route::put('/{id}', [PenjualanController::class, 'update']); // menyimpan data penjualan yang diubah
+            Route::get('/{id}/edit_ajax', [PenjualanController::class, 'edit_ajax']); // menampilkan halaman form edit data penjualan Ajax
+            Route::put('/{id}/update_ajax', [PenjualanController::class, 'update_ajax']); // menyimpan perubahan data penjualan Ajax
+            Route::get('/{id}/delete_ajax', [PenjualanController::class, 'confirm_ajax']); // untuk tampilkan form confirm delete penjualan Ajax
+            Route::delete('/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']); // untuk hapus data penjualan Ajax
+            Route::delete('/{id}', [PenjualanController::class, 'destroy']); // menghapus data penjualan
+            Route::get('/import', [PenjualanController::class, 'import']); //ajax form upload excel
+            Route::post('/import_ajax', [PenjualanController::class, 'import_ajax']); //ajax import excel
+            Route::get('/export_excel', [PenjualanController::class, 'export_excel']); //export excel
+            Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']); //export pdf
+        });
+    });
+    Route::group(['prefix' => 'stok'], function(){
+        Route::middleware(['authorize:ADM,MNG,STF'])->group(function() {
+            Route::get('/', [StokController::class, 'index']); // menampilkan halaman awal stok
+            Route::post('/list', [StokController::class, 'list']); // menampilkan data stok dalam bentuk json untuk datables
+            Route::get('/create', [StokController::class, 'create']); // menampilkan halaman form tambah stok
+            Route::get('/create_ajax', [StokController::class, 'create_ajax']); // menampilkan halaman form tambah stok Ajax
+            Route::post('/ajax', [StokController::class, 'store_ajax']); // menyimpan data stok baru Ajax
+            Route::post('/', [StokController::class, 'store']); // menyimpan data stok baru
+            Route::get('/{id}', [StokController::class, 'show']); // menampilkan detail stok
+            Route::get('/{id}/edit', [StokController::class, 'edit']); // menampilkan halaman form edit stok
+            Route::put('/{id}', [StokController::class, 'update']); // menyimpan data stok yang diubah
+            Route::get('/{id}/edit_ajax', [StokController::class, 'edit_ajax']); // menampilkan halaman form edit data stok Ajax
+            Route::put('/{id}/update_ajax', [StokController::class, 'update_ajax']); // menyimpan perubahan data stok Ajax
+            Route::get('/{id}/delete_ajax', [StokController::class, 'confirm_ajax']); // untuk tampilkan form confirm delete stok Ajax
+            Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']); // untuk hapus data stok Ajax
+            Route::delete('/{id}', [StokController::class, 'destroy']); // menghapus data stok
+            Route::get('/import', [StokController::class, 'import']); //ajax form upload excel
+            Route::post('/import_ajax', [StokController::class, 'import_ajax']); //ajax import excel
+            Route::get('/export_excel', [StokController::class, 'export_excel']); //export excel
+            Route::get('/export_pdf', [StokController::class, 'export_pdf']); //export pdf
         });
     });
 });
